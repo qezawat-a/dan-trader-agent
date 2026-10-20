@@ -1,7 +1,7 @@
 """Bridge between Telegram agent and trader engine. Imported by agent_cmds.py."""
 import threading
 import time
-import bridge as trader_bridge
+from trader import bridge as trader_bridge
 
 _send_fn = None
 _started = False

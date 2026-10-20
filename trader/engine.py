@@ -13,8 +13,8 @@ Manager (every MANAGE_INTERVAL_SEC per open position):
   account TP/SL — close everything on total unrealised PnL bounds
 """
 import time
-import strategies
-import tpsl
+from . import strategies
+from . import tpsl
 
 
 def scan_symbol(client, symbol, cfg):

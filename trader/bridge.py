@@ -1,11 +1,11 @@
 """Trader <-> Telegram bridge: /trade commands, background loops, report + guard."""
 import threading
 import time
-import client as _client_mod
-import tconfig
-import engine as eng
-import sizing
-import tpsl
+from . import client as _client_mod
+from . import tconfig
+from . import engine as eng
+from . import sizing
+from . import tpsl
 
 _client = None
 _loops = {}
@@ -34,12 +34,12 @@ def _notify(msg):
 
 
 def _scan_loop(send):
+    global _last_signals
     cfg = tconfig.load()
     while _loops.get("scan"):
         try:
             cfg = tconfig.load()
             if cfg["engine_on"] and cfg["scanning"]:
-                global _last_signals
                 _last_signals = eng.scan_all(get_client(), cfg)
                 hits = [s for s in _last_signals if s["dir"] in ("LONG", "SHORT")]
                 if hits and cfg["report_on"]:
@@ -128,6 +128,7 @@ def ensure_loops(send):
 
 def handle(text):
     """Handle /trade <args>. Returns reply string. Live orders need autotrade ON."""
+    global _last_signals
     import os
     cfg = tconfig.load()
     a = (text or "").strip().split()
@@ -230,7 +231,6 @@ def handle(text):
     if c == "scan":
         try:
             res = eng.scan_all(get_client(), cfg)
-            global _last_signals
             _last_signals = res
             return "\n".join(f"{s['symbol']}: {s['dir']} {s.get('conf', 0):.1f}% [{','.join(s.get('tfs', []))}]" for s in res)
         except Exception as e:
