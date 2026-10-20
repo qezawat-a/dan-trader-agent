@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.log
+trader/trader.json
+memory/*.md
+sessions/*.jsonl
+generated/
+*.json
+!models.json
+!requirements.txt
